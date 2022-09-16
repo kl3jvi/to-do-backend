@@ -1,9 +1,11 @@
 package com.kl3jvi.plugins
 
+import com.kl3jvi.models.ToDoDraft
 import com.kl3jvi.repository.Either
 import com.kl3jvi.repository.ToDoRepositoryImpl
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
@@ -35,13 +37,24 @@ fun Application.configureRouting() {
             }
         }
 
-        post("/todos") { }
+        post("/todos") {
+            val draftToDo = call.receive<ToDoDraft>()
+            when (val result = repository.addTodo(draftToDo)) {
+                is Either.Error -> call.respond(result.message)
+                is Either.Success -> call.respond(result.data)
+            }
+            call.respondText("Customer stored correctly", status = HttpStatusCode.Created)
+        }
 
-        post("/todos/{id}") { }
+        post("/todos/{id}") {
+
+        }
 
         put("/todos/{id}") { }
 
-        delete("/todos/{id}") { }
+        delete("/todos/{id}") {
+//            val id
+        }
 
     }
 }
