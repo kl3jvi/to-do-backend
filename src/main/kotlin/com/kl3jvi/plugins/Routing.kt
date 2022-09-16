@@ -1,19 +1,24 @@
 package com.kl3jvi.plugins
 
-import io.ktor.server.routing.*
-import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
-import io.ktor.server.request.*
+import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
+    routing {
+        get("/") { call.respondText("Hello World!") }
 
-    // Starting point for a Ktor app:
-    routing {
-        get("/") {
-            call.respondText("Hello World!")
-        }
-    }
-    routing {
+        get("/todos") { }
+
+        get("/todos/{id}") { }
+
+        post("/todos") { }
+
+        post("/todos/{id}") { }
+
+        put("/todos/{id}") { }
+
+        delete("/todos/{id}") { }
+
     }
 }
