@@ -6,7 +6,13 @@ import com.kl3jvi.models.ToDo
 class ToDoRepositoryImpl : ToDoRepository {
 
     var list = mutableListOf(
-        ToDo(1, "Title", true)
+        ToDo(1, "Title", true),
+        ToDo(2, "Naruto", false),
+        ToDo(3, "Ardit", false),
+        ToDo(4, "Klejvi", true),
+        ToDo(5, "Kristi", false),
+        ToDo(6, "Flak", true),
+        ToDo(7, "Tarzani", false),
     )
 
     /**
@@ -29,9 +35,7 @@ class ToDoRepositoryImpl : ToDoRepository {
      */
     override fun getToDo(id: Int): Either<ToDo?> {
         return runCatching {
-            Either.success(
-                list.firstOrNull { it.id == id }
-            )
+            Either.success(list.firstOrNull { it.id == id })
         }.getOrDefault(Either.error("Something went wrong"))
     }
 

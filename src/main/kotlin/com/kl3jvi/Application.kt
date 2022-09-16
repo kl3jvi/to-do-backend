@@ -1,6 +1,7 @@
 package com.kl3jvi
 
 import com.kl3jvi.plugins.configureCallLogging
+import com.kl3jvi.plugins.configureKoinDI
 import com.kl3jvi.plugins.configureRouting
 import com.kl3jvi.plugins.configureSerialization
 import io.ktor.server.engine.*
@@ -11,5 +12,6 @@ fun main() {
         configureRouting()
         configureCallLogging()
         configureSerialization()
+        configureKoinDI()
     }.start(wait = true)
 }
