@@ -1,0 +1,1 @@
+web: ./build/install/to-do-backend/bin/to-do-backend
