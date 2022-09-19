@@ -43,7 +43,8 @@ fun Application.configureRouting() {
             val draftToDo = call.receive<ToDoDraft>()
             val result = repository.addTodo(draftToDo)
             result.onSuccess {
-                call.respond(it)
+                if (it != null)
+                    call.respond(it)
                 call.respondText("Customer stored correctly", status = HttpStatusCode.Created)
             }.onFailure {
                 call.respond(it)

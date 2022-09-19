@@ -2,27 +2,24 @@ package com.kl3jvi.repository
 
 import com.kl3jvi.models.ToDo
 import com.kl3jvi.models.ToDoDraft
+import com.kl3jvi.persistence.ToDoDaoImpl
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 
-class ToDoRepositoryImpl : ToDoRepository {
+class ToDoRepositoryImpl : ToDoRepository, KoinComponent {
 
-    private var list = mutableListOf(
-        ToDo(1, "Title", true),
-        ToDo(2, "Naruto", false),
-        ToDo(3, "Ardit", false),
-        ToDo(4, "Klejvi", true),
-        ToDo(5, "Kristi", false),
-        ToDo(6, "Flak", true),
-        ToDo(7, "Tarzani", false),
-    )
+    val dao: ToDoDaoImpl by inject()
+
 
     /**
      * It returns a list of ToDos.
      *
      * @return Either<List<ToDo>>
      */
-    override fun getAllTodos(): Either<List<ToDo>> {
+    override suspend fun getAllTodos(): Either<List<ToDo>> {
         return runCatching {
+            val list = dao.allToDos()
             if (list.isEmpty()) Either.error("Nothing found!")
             else Either.success(list.toList())
         }.getOrDefault(Either.error("Something went wrong"))
@@ -34,9 +31,10 @@ class ToDoRepositoryImpl : ToDoRepository {
      * @param id Int - The id of the ToDo item to be retrieved
      * @return Either<ToDo?>
      */
-    override fun getToDo(id: Int): Either<ToDo?> {
+    override suspend fun getToDo(id: Int): Either<ToDo?> {
         return runCatching {
-            Either.success(list.firstOrNull { it.id == id })
+            val todo = dao.toDo(id)
+            Either.success(todo)
         }.getOrDefault(Either.error("Something went wrong"))
     }
 
@@ -46,9 +44,10 @@ class ToDoRepositoryImpl : ToDoRepository {
      * @param id The id of the item to be removed
      * @return Either<Boolean>
      */
-    override fun removeById(id: Int): Either<Boolean> {
+    override suspend fun removeById(id: Int): Either<Boolean> {
         return runCatching {
-            Either.success(list.removeIf { it.id == id })
+            val transaction = dao.deleteToDo(id)
+            Either.success(transaction)
         }.getOrDefault(Either.error("Something went wrong and couldn't add to db"))
     }
 
@@ -59,13 +58,10 @@ class ToDoRepositoryImpl : ToDoRepository {
      * @param draft ToDoDraft - This is the parameter that will be passed to the function.
      * @return Either<ToDo>
      */
-    override fun addTodo(draft: ToDoDraft): Either<ToDo> {
+    override suspend fun addTodo(draft: ToDoDraft): Either<ToDo?> {
         return runCatching {
-            val toDo = ToDo(
-                id = list.size + 1, title = draft.title, done = draft.done
-            )
-            list.add(toDo)
-            Either.success(toDo)
+            val transaction = dao.addNewToDo(draft.title, draft.done)
+            Either.success(transaction)
         }.getOrDefault(Either.error("Something went wrong"))
     }
 
@@ -76,17 +72,10 @@ class ToDoRepositoryImpl : ToDoRepository {
      * @param draft ToDoDraft - This is the object that contains the new values for the todo.
      * @return Either<Boolean>
      */
-    override fun updateTodo(id: Int, draft: ToDoDraft): Either<Boolean> {
+    override suspend fun updateTodo(id: Int, draft: ToDoDraft): Either<Boolean> {
         return runCatching {
-            val todo = list.firstOrNull { it.id == id }
-
-            val result = if (todo != null) {
-                todo.title = draft.title
-                todo.done = draft.done
-                true
-            } else false
-
-            Either.success(result)
+            val todo = dao.editToDo(id, draft.title, draft.done)
+            Either.success(todo)
         }.getOrDefault(Either.error("Something went wrong"))
     }
 }
