@@ -2,15 +2,13 @@ package com.kl3jvi.repository
 
 import com.kl3jvi.models.ToDo
 import com.kl3jvi.models.ToDoDraft
-import com.kl3jvi.persistence.ToDoDaoImpl
+import com.kl3jvi.persistence.ToDoDao
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 
-class ToDoRepositoryImpl : ToDoRepository, KoinComponent {
-
-    val dao: ToDoDaoImpl by inject()
-
+class ToDoRepositoryImpl(
+    private val dao: ToDoDao
+) : ToDoRepository {
 
     /**
      * It returns a list of ToDos.

@@ -1,7 +1,7 @@
 package com.kl3jvi.plugins
 
 import com.kl3jvi.models.ToDoDraft
-import com.kl3jvi.repository.ToDoRepositoryImpl
+import com.kl3jvi.repository.ToDoRepository
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -10,7 +10,7 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
 fun Application.configureRouting() {
-    val repository: ToDoRepositoryImpl by inject()
+    val repository: ToDoRepository by inject()
     routing {
         get("/") { call.respond(HttpStatusCode.NotFound, "Use other url routes") }
 

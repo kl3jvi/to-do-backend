@@ -8,9 +8,8 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
-
 object DatabaseFactory {
-    fun init() {
+    operator fun invoke() {
         val driverClassName = "com.mysql.cj.jdbc.Driver"
         val jdbcURL = "jdbc:mysql://remotemysql.com:3306/GQ7HytpfZt"
         val database = Database.connect(jdbcURL, driverClassName, user = "GQ7HytpfZt", password = "BEAy6gasWp")
